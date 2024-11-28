@@ -28,6 +28,8 @@ public class Main {
 
     public static void main(String[] args) {
         int PORT = 4242; //puerto por default
+        String folderOrigen = "." + "\\origen";
+        String folderDestino = "." + "\\destino";
         if (args.length > 0) {
             PORT = Integer.parseInt(args[0]);
         }
@@ -49,14 +51,14 @@ public class Main {
                                 System.out.println("Cliente: "+message);
                                 break;
                             case ARCHIVO:
-                                recibirArchivo(din);
+                                recibirArchivo(din, folderDestino);
                                 break;
                             case LISTA_ARCHIVOS:
                                 recibirListaArchivos(din);
                                 break;
                             case SOLICITAR_ARCHIVOS:
                                 dout.writeInt(LISTA_ARCHIVOS);
-                                List<String> lista = obtenlistaArchivosLocales(".");
+                                List<String> lista = obtenlistaArchivosLocales(folderOrigen);
                                 enviarListaArchivos(dout, lista);
                                 break;
                             default:
@@ -93,10 +95,10 @@ public class Main {
                             break;
 
                         case "/help":
-                            System.out.println("Lista de comandos \n" +
-                                    "1. Enviar un archivo = /archivo <ruta>\n" +
-                                    "2. Mostrar lista local = /lista_local\n" +
-                                    "3. Mostrar lista remota (dispositivo conectado) = /lista_remota");
+                            System.out.println("Lista de comandos: \n" +
+                                    "/archivo <ruta>    \tEnvia un archivo al dispositivo con conexion\n" +
+                                    "/lista_local       \tMuestra lista de archivos locales\n" +
+                                    "/lista_remota      \tMuestra lista de archivos del dispositivo con conexion");
                             break;
 
                         default:
@@ -117,7 +119,7 @@ public class Main {
             System.out.println("Error de conexion:"+e.getMessage());
         }
     }
-    private static void recibirArchivo(DataInputStream din) throws Exception {
+    private static void recibirArchivo(DataInputStream din, String folderDestino) throws Exception {
         // Leemos longitud de archivo
         int fileNameLength = din.readInt();
 
@@ -132,7 +134,7 @@ public class Main {
         System.out.println("Recibiendo archivo: " + fileName + " (" + fileLength + " bytes)");
 
         // Create output file
-        File file = new File("received_" + fileName);
+        File file = new File(folderDestino, "received_" + fileName);
         try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
             // Read file contents
             byte[] buffer = new byte[4 * 1024];
