@@ -29,7 +29,7 @@ public class Main {
     private static final int LISTA_ARCHIVOS_CIFRADOS = 6;
 
     public static void main(String[] args) {
-        int PORT = 4242; //puerto por default
+        int PORT = 4242;
         String folderOrigen = "." + "\\origen";
         String folderDestino = "." + "\\destino";
         String folderCifrados = "." + "\\libros_cifrados";
@@ -234,8 +234,4 @@ public class Main {
 
     public static void descifrarArchivo(){}
     public static void descifrarListaArchivos(){}
-    public static void recibirArchivoCifrado(){}
-    public static void enviarArhcivoDescifrado(){}
-    public static void recibirListaArchivosCifrados() {}
-    public static void enviarListaArchivosDecifrados() {}
 }
