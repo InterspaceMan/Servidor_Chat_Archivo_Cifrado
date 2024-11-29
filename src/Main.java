@@ -25,11 +25,14 @@ public class Main {
     private static final int ARCHIVO = 2;
     private static final int LISTA_ARCHIVOS = 3;
     private static final int SOLICITAR_ARCHIVOS = 4;
+    private static final int ARCHIVO_CIFRADO = 5;
+    private static final int LISTA_ARCHIVOS_CIFRADOS = 6;
 
     public static void main(String[] args) {
         int PORT = 4242; //puerto por default
         String folderOrigen = "." + "\\origen";
         String folderDestino = "." + "\\destino";
+        String folderCifrados = "." + "\\libros_cifrados";
         if (args.length > 0) {
             PORT = Integer.parseInt(args[0]);
         }
@@ -40,6 +43,8 @@ public class Main {
             DataOutputStream dout=new DataOutputStream(socket.getOutputStream());
             Scanner scanner = new Scanner(System.in);
 
+            System.out.println("Servidor iniciado...");
+            System.out.printf("Cliente " + socket.getInetAddress().getHostAddress() + " se ha conectado\n");
             //Recepción
             Thread receiveThread = new Thread(()-> {
                 try {
@@ -61,6 +66,9 @@ public class Main {
                                 List<String> lista = obtenlistaArchivosLocales(folderOrigen);
                                 enviarListaArchivos(dout, lista);
                                 break;
+                            case ARCHIVO_CIFRADO:
+                                dout.writeInt(ARCHIVO);
+                                descifrarArchivo();
                             default:
                                 System.out.println("Tipo:"+tipo);
                                 break;
@@ -81,7 +89,7 @@ public class Main {
                     switch (command) {
                         case "/archivo":
                             String filePath = clientMessage.substring(8).trim();
-
+                            filePath = folderOrigen + filePath;
                             enviarArchivo(dout, filePath);
                             break;
 
@@ -114,7 +122,6 @@ public class Main {
                     }
                 }
             }
-
         } catch (Exception e) {
             System.out.println("Error de conexion:"+e.getMessage());
         }
@@ -224,4 +231,11 @@ public class Main {
             System.out.println("Error al recibir la lista de archivos: " + e.getMessage());
         }
     }
+
+    public static void descifrarArchivo(){}
+    public static void descifrarListaArchivos(){}
+    public static void recibirArchivoCifrado(){}
+    public static void enviarArhcivoDescifrado(){}
+    public static void recibirListaArchivosCifrados() {}
+    public static void enviarListaArchivosDecifrados() {}
 }
